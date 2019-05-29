@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="no" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+
+<form id="skjema">
+
+<input type="text" id="inpAvsender" required placeholder="Hvem er du?">
+
+<input type="text" id="inpMening" required placeholder="Hva sier du?">
+
+<button type="submit" class="button">OK</button>
+
+</form>
+
+<article id="txtMeldinger"></article>
+
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+
+<script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAffvx_tSOWR69AItbLIDFwqJnDNVZNG28",
+    authDomain: "kapittel-c3b74.firebaseapp.com",
+    databaseURL: "https://kapittel-c3b74.firebaseio.com",
+    projectId: "kapittel-c3b74",
+    storageBucket: "kapittel-c3b74.appspot.com",
+    messagingSenderId: "302061828590",
+    appId: "1:302061828590:web:7d1bd3584a8a6876"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+
+<script>
+
+let database = firebase.database();
+
+let meldinger = database.ref("meldinger");
+
+let skjema = document.getElementById("skjema");
+
+let inpAvsender = document.getElementById("inpAvsender");
+
+let inpMening = document.getElementById("inpMening");
+
+let txtMeldinger = document.getElementById("txtMeldinger");
+
+function visMelding(snapshot) {
+
+let melding = snapshot.val();
+
+let meldingTekst = `<p>
+
+<b>${melding.avsender}: </b>
+
+<i>${melding.tekst}</i>
+
+</p>`;
+
+txtMeldinger.innerHTML = txtMeldinger.innerHTML + meldingTekst;
+
+}
+
+function regNyMelding(evt) {
+
+evt.preventDefault();
+
+let nyMelding = {
+
+avsender: inpAvsender.value,
+
+tekst: inpMening.value
+
+};
+
+meldinger.push(nyMelding);
+
+inpMening.value = "";
+
+}
+
+meldinger.on("child_added", visMelding);
+
+skjema.onsubmit = regNyMelding;
+
+</script>
+
+
+  </body>
+</html>
